@@ -120,3 +120,4 @@
 /Users/dapooloyede/dotnet-pg-microservice/src/obj/Debug/net10.0/dotnet-pg-microservice.pdb
 /Users/dapooloyede/dotnet-pg-microservice/src/obj/Debug/net10.0/dotnet-pg-microservice.genruntimeconfig.cache
 /Users/dapooloyede/dotnet-pg-microservice/src/obj/Debug/net10.0/ref/dotnet-pg-microservice.dll
+/Users/dapooloyede/dotnet-pg-microservice/src/obj/Debug/net10.0/dotnet-pg-microservice.sourcelink.json
