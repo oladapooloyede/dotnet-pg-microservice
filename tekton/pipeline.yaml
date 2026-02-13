@@ -89,12 +89,11 @@ spec:
             workingDir: $(workspaces.source.path)
             script: |
               #!/usr/bin/env bash
-              oc apply -f k8s/secret.yaml -n $(params.NAMESPACE)
-              oc apply -f k8s/deployment.yaml -n $(params.NAMESPACE)
-              oc apply -f k8s/service.yaml -n $(params.NAMESPACE)
-              oc apply -f k8s/route.yaml -n $(params.NAMESPACE)
-              oc set image deployment/dotnet-pg-microservice \
-                dotnet-pg-microservice=$(params.IMAGE) \
-                -n $(params.NAMESPACE)
+              set -e
+              sed "s|IMAGE_PLACEHOLDER|$(params.IMAGE)|g" k8s/deployment.yaml > /tmp/deployment.yaml
+              oc apply --server-side --force-conflicts -f k8s/secret.yaml -n $(params.NAMESPACE)
+              oc apply --server-side --force-conflicts -f /tmp/deployment.yaml -n $(params.NAMESPACE)
+              oc apply --server-side --force-conflicts -f k8s/service.yaml -n $(params.NAMESPACE)
+              oc apply --server-side --force-conflicts -f k8s/route.yaml -n $(params.NAMESPACE)
               oc rollout status deployment/dotnet-pg-microservice \
                 -n $(params.NAMESPACE) --timeout=120s

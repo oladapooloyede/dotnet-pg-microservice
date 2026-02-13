@@ -1,6 +1,6 @@
 # Stage 1: Build
 FROM registry.access.redhat.com/ubi9/dotnet-100 AS build
-USER 0
+USER 1001
 WORKDIR /src
 
 COPY src/*.csproj ./

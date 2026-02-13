@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dotnet-pg-microservice
-          image: image-registry.openshift-image-registry.svc:5000/$(NAMESPACE)/dotnet-pg-microservice:latest
+          image: IMAGE_PLACEHOLDER
           ports:
             - containerPort: 8080
               protocol: TCP
