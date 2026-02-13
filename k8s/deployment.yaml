@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-pg-microservice
+  labels:
+    app: dotnet-pg-microservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dotnet-pg-microservice
+  template:
+    metadata:
+      labels:
+        app: dotnet-pg-microservice
+    spec:
+      containers:
+        - name: dotnet-pg-microservice
+          image: image-registry.openshift-image-registry.svc:5000/$(NAMESPACE)/dotnet-pg-microservice:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: dotnet-pg-microservice-db
+                  key: CONNECTION_STRING
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5

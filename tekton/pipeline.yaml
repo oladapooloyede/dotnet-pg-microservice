@@ -1,0 +1,80 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: dotnet-pg-microservice-pipeline
+  labels:
+    app: dotnet-pg-microservice
+spec:
+  params:
+    - name: git-url
+      type: string
+      description: The Git repository URL
+    - name: git-revision
+      type: string
+      description: The Git revision to build
+      default: main
+    - name: image-name
+      type: string
+      description: The fully qualified image name to push
+    - name: namespace
+      type: string
+      description: The OpenShift namespace to deploy to
+
+  workspaces:
+    - name: shared-workspace
+    - name: docker-credentials
+
+  tasks:
+    - name: clone-repo
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+
+    - name: build-and-push
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      runAfter:
+        - clone-repo
+      params:
+        - name: IMAGE
+          value: $(params.image-name)
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: .
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: dockerconfig
+          workspace: docker-credentials
+
+    - name: deploy
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      runAfter:
+        - build-and-push
+      params:
+        - name: SCRIPT
+          value: |
+            oc apply -f k8s/secret.yaml -n $(params.namespace)
+            oc apply -f k8s/deployment.yaml -n $(params.namespace)
+            oc apply -f k8s/service.yaml -n $(params.namespace)
+            oc apply -f k8s/route.yaml -n $(params.namespace)
+            oc set image deployment/dotnet-pg-microservice \
+              dotnet-pg-microservice=$(params.image-name) \
+              -n $(params.namespace)
+            oc rollout status deployment/dotnet-pg-microservice \
+              -n $(params.namespace) --timeout=120s
+      workspaces:
+        - name: manifest-dir
+          workspace: shared-workspace
