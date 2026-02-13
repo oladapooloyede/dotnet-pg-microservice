@@ -9,13 +9,13 @@ spec:
     name: dotnet-pg-microservice-pipeline
   params:
     - name: git-url
-      value: "https://github.com/your-org/dotnet-pg-microservice.git"
+      value: "https://github.com/oladapooloyede/dotnet-pg-microservice"
     - name: git-revision
-      value: main
+      value: master
     - name: image-name
-      value: "image-registry.openshift-image-registry.svc:5000/your-namespace/dotnet-pg-microservice:latest"
+      value: "image-registry.openshift-image-registry.svc:5000/test2/dotnet-pg-microservice:latest"
     - name: namespace
-      value: "your-namespace"
+      value: "test2"
   workspaces:
     - name: shared-workspace
       volumeClaimTemplate:
@@ -25,6 +25,3 @@ spec:
           resources:
             requests:
               storage: 1Gi
-    - name: docker-credentials
-      secret:
-        secretName: docker-credentials
