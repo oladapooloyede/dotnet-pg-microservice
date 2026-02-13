@@ -13,9 +13,9 @@ spec:
     - name: git-revision
       value: master
     - name: image-name
-      value: "image-registry.openshift-image-registry.svc:5000/test2/dotnet-pg-microservice:latest"
+      value: "image-registry.openshift-image-registry.svc:5000/demo-docker/dotnet-pg-microservice:latest"
     - name: namespace
-      value: "test2"
+      value: "demo-docker"
   workspaces:
     - name: shared-workspace
       volumeClaimTemplate:
