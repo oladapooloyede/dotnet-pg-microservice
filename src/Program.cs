@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using DotnetPgMicroservice.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,11 @@ app.MapHealthChecks("/healthz");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var dbCreator = db.Database.GetService<IRelationalDatabaseCreator>();
+    if (!dbCreator.Exists())
+    {
+        dbCreator.Create();
+    }
     db.Database.Migrate();
 }
 
