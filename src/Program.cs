@@ -31,7 +31,15 @@ using (var scope = app.Services.CreateScope())
     {
         dbCreator.Create();
     }
-    db.Database.Migrate();
+    try
+    {
+        db.Database.Migrate();
+    }
+    catch (Npgsql.PostgresException ex) when (ex.SqlState == "42P07")
+    {
+        // Tables already exist from a previous EnsureCreated() — safe to ignore.
+        // The __EFMigrationsHistory table will be created by Migrate() on next restart.
+    }
 }
 
 app.Run();
