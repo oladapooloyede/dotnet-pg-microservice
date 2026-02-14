@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dotnet-pg-microservice")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f07a2e20d22325b169357b5510cea4c0c88958b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+761768e7541a2c96fa32b2319853459931952e8a")]
 [assembly: System.Reflection.AssemblyProductAttribute("dotnet-pg-microservice")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dotnet-pg-microservice")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
